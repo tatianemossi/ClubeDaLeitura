@@ -2,25 +2,23 @@
 
 namespace ClubeDaLeitura.ConsoleApp
 {
-    internal class Emprestimo
+    public class Emprestimo
     {
         public Amigo Amigo;
         public Revista Revista;
         public DateTime DataEmprestimo;
         public DateTime DataLimiteDevolucao;
         public DateTime? DataDevolucao;
-               
-        public Emprestimo(Revista revista, Amigo amigo, DateTime dataEmprestimo, DateTime dataLimiteDevolucao)
+
+        public Emprestimo()
         {
-            Revista = revista;
-            Amigo = amigo;
-            DataEmprestimo = dataEmprestimo;
-            DataLimiteDevolucao = dataLimiteDevolucao;
+            Revista = new Revista();
+            Amigo = new Amigo();
         }
 
-        public void ConcluirEmprestimo(DateTime dataDevolucao)
+        public void ConcluirEmprestimo()
         {
-            DataDevolucao = dataDevolucao;
-        }        
+            DataDevolucao = DateTime.Today;
+        }
     }
 }

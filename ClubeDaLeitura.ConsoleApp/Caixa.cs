@@ -1,9 +1,9 @@
 ﻿namespace ClubeDaLeitura.ConsoleApp
 {
-    internal class Caixa
+    public class Caixa
     {
         public string Cor;
         public string Etiqueta;
-        public int Numero;
+        public int? Numero;
     }
 }
