@@ -8,10 +8,12 @@ namespace ClubeDaLeitura.ConsoleApp
         public string TipoDeColecao;
         public int? NumeroDaEdicao;
         public int? AnoDaRevista;
-        public Caixa Caixa;
+        public bool Disponivel;
+        public Caixa Caixa;        
 
         public Revista()
         {
+            Disponivel = true;
             Caixa = new Caixa();
         }
     }

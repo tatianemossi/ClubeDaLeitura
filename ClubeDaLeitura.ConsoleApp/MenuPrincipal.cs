@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClubeDaLeitura.ConsoleApp
 {
@@ -58,6 +54,7 @@ namespace ClubeDaLeitura.ConsoleApp
             if (opcaoSelecionada != "1" &&
                 opcaoSelecionada != "2" &&
                 opcaoSelecionada != "3" &&
+                opcaoSelecionada != "4" &&
                 opcaoSelecionada != "s")
             {
                 return true;

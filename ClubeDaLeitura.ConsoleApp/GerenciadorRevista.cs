@@ -6,12 +6,14 @@ namespace ClubeDaLeitura.ConsoleApp
     {
         Revista[] listaRevistas;
         int indiceRevista;
+        Caixa[] listaCaixas;
         Notificador notificador = new Notificador();
 
-        public GerenciadorRevista(Revista[] revistas, int indice)
+        public GerenciadorRevista(Revista[] revistas, int indiceRevistas, Caixa[] caixas)
         {
             listaRevistas = revistas;
-            indiceRevista = indice;
+            indiceRevista = indiceRevistas;
+            listaCaixas = caixas;
         }
 
         public string opcaoRevista;
@@ -70,7 +72,8 @@ namespace ClubeDaLeitura.ConsoleApp
             {
                 if (listaRevistas[i] != null)
                 {
-                    Console.WriteLine($"Nome: {listaRevistas[i].Nome}, Tipo de Coleção: {listaRevistas[i].TipoDeColecao}, Ano: {listaRevistas[i].AnoDaRevista}");
+                    Console.WriteLine($"Nome: {listaRevistas[i].Nome}, Tipo de Coleção: {listaRevistas[i].TipoDeColecao}, " +
+                        $"Ano: {listaRevistas[i].AnoDaRevista}, Caixa: {listaRevistas[i].Caixa}");
                 }
                 else
                 {
@@ -144,7 +147,7 @@ namespace ClubeDaLeitura.ConsoleApp
                 }
 
                 notificador.ApresentarMensagem("Revista Editada!", ConsoleColor.Green);
-            }           
+            }
         }
 
         public void Adicionar()
@@ -163,12 +166,32 @@ namespace ClubeDaLeitura.ConsoleApp
             Console.WriteLine("Digite o Ano da revista: ");
             revista.AnoDaRevista = Convert.ToInt32(Console.ReadLine());
 
-            //Console.WriteLine("Em qual caixa a revista está?");
+            Console.WriteLine("Qual o número da caixa que a revista está?");
+            int numeroCaixa = Convert.ToInt32(Console.ReadLine());
+            int? indiceCaixa = null;
 
-            listaRevistas[indiceRevista] = revista;
-            indiceRevista++;
+            for (int i = 0; i < listaCaixas.Length; i++)
+            {
+                if (numeroCaixa == listaCaixas[i]?.Numero)
+                {
+                    indiceCaixa = i;
+                }
+            }
 
-            notificador.ApresentarMensagem("Revista cadastrada!", ConsoleColor.Green);
+            if (indiceCaixa == null)
+            {
+                notificador.ApresentarMensagem("Caixa não encontrada", ConsoleColor.DarkYellow);
+                notificador.ApresentarMensagem("Revista não cadastrada", ConsoleColor.DarkYellow);
+                return;
+            }
+            else
+            {
+                revista.Caixa = listaCaixas[(int)indiceCaixa];
+                listaRevistas[indiceRevista] = revista;
+                indiceRevista++;
+
+                notificador.ApresentarMensagem("Revista cadastrada!", ConsoleColor.Green);
+            }            
         }
 
         public int? BuscarIndiceRevista()
@@ -222,6 +245,6 @@ namespace ClubeDaLeitura.ConsoleApp
                 return true;
             }
             return false;
-        }        
+        }
     }
 }

@@ -6,12 +6,16 @@ namespace ClubeDaLeitura.ConsoleApp
     {
         Emprestimo[] listaEmprestimos;
         int indiceEmprestimo;
+        Revista[] listaRevista;
+        Amigo[] listaAmigo;
         Notificador notificador = new Notificador();
 
-        public GerenciadorEmprestimo(Emprestimo[] emprestimos, int indice)
+        public GerenciadorEmprestimo(Emprestimo[] emprestimos, int indice, Revista[] revistas, Amigo[] amigos)
         {
             listaEmprestimos = emprestimos;
             indiceEmprestimo = indice;
+            listaRevista = revistas;
+            listaAmigo = amigos;
         }
 
         public string opcaoEmprestimo;
@@ -26,13 +30,11 @@ namespace ClubeDaLeitura.ConsoleApp
 
                 Console.WriteLine("Digite 2 para Editar Empréstimos");
 
-                Console.WriteLine("Digite 3 para Excluir Empréstimos");
+                Console.WriteLine("Digite 3 para Concluir Empréstimos");
 
-                Console.WriteLine("Digite 4 para Concluir Empréstimos");
+                Console.WriteLine("Digite 4 para Visualizar Empréstimos em Aberto");
 
-                Console.WriteLine("Digite 5 para Visualizar Empréstimos em Aberto");
-
-                Console.WriteLine("Digite 6 para Visualizar Empréstimos do Mês");
+                Console.WriteLine("Digite 5 para Visualizar Empréstimos do Mês");
 
                 Console.WriteLine("Digite s para sair");
 
@@ -52,11 +54,6 @@ namespace ClubeDaLeitura.ConsoleApp
                     VisualizarEmprestimosEmAberto();
                     Editar();
                 }
-                else if (EhExcluirEmprestimos())
-                {
-                    VisualizarEmprestimosEmAberto();
-                    Excluir();
-                }
                 else if (EhConcluirEmprestimos())
                 {
                     ConcluirEmprestimo();
@@ -69,13 +66,12 @@ namespace ClubeDaLeitura.ConsoleApp
                 {
                     VisualizarEmprestimosMes();
                 }
-
                 else if (EhOpcaoInvalida())
                 {
                     notificador.ApresentarMensagem("Opção Inválida", ConsoleColor.Red);
                 }
             }
-            
+
         }
 
         public bool EhAdicionarEmprestimos()
@@ -88,24 +84,19 @@ namespace ClubeDaLeitura.ConsoleApp
             return opcaoEmprestimo == "2";
         }
 
-        public bool EhExcluirEmprestimos()
+        public bool EhConcluirEmprestimos()
         {
             return opcaoEmprestimo == "3";
         }
 
-        public bool EhConcluirEmprestimos()
+        public bool EhVisualizarEmprestimosEmAberto()
         {
             return opcaoEmprestimo == "4";
         }
 
-        public bool EhVisualizarEmprestimosEmAberto()
-        {
-            return opcaoEmprestimo == "5";
-        }
-
         public bool EhVisualizarEmprestimosMes()
         {
-            return opcaoEmprestimo == "6";
+            return opcaoEmprestimo == "5";
         }
 
         public bool EhSair()
@@ -120,7 +111,6 @@ namespace ClubeDaLeitura.ConsoleApp
                 opcaoEmprestimo != "3" &&
                 opcaoEmprestimo != "4" &&
                 opcaoEmprestimo != "5" &&
-                opcaoEmprestimo != "6" &&
                 opcaoEmprestimo != "s")
             {
                 return true;
@@ -133,17 +123,68 @@ namespace ClubeDaLeitura.ConsoleApp
             Emprestimo emprestimo = new Emprestimo();
 
             Console.WriteLine("Digite o nome do Amigo que Pegou a Revista: ");
-            string nomeAmigoEmprestimo = Console.ReadLine();
-            emprestimo.Amigo.NomeDoAmigo = Console.ReadLine();
+            string nomeAmigo = Console.ReadLine();
+            int? indiceAmigo = null;
+
+            for (int i = 0; i < listaAmigo.Length; i++)
+            {
+                if (nomeAmigo == listaAmigo[i]?.NomeDoAmigo)
+                {
+                    indiceAmigo = i;
+                }
+            }
+
+            if (indiceAmigo == null)
+            {
+                notificador.ApresentarMensagem("Amigo não encontrado", ConsoleColor.DarkYellow);
+            }
+            else
+                emprestimo.Amigo = listaAmigo[(int)indiceAmigo];
 
             Console.WriteLine("Digite o nome da Revista: ");
-            emprestimo.Revista.Nome = Console.ReadLine();
+            string nomeRevista = Console.ReadLine();
+            int? indiceRevista = null;
+
+            for (int i = 0; i < listaRevista.Length; i++)
+            {
+                if (nomeRevista == listaRevista[i]?.Nome && listaRevista[i].Disponivel == true)
+                    indiceRevista = i;
+            }
+
+            if (indiceRevista == null)
+                notificador.ApresentarMensagem("Revista não encontrada ou não está disponível", ConsoleColor.Red);
+            else
+            {
+                listaRevista[(int)indiceRevista].Disponivel = false;
+                emprestimo.Revista = listaRevista[(int)indiceRevista];
+            }
 
             Console.WriteLine("Digite a Data do Empréstimo (dd/MM/AAAA): ");
-            emprestimo.DataEmprestimo = Convert.ToDateTime(Console.ReadLine());
+            string dataDigitada = Console.ReadLine();
+
+            DateTime dataEmprestimo;
+            if (DateTime.TryParse(dataDigitada, out dataEmprestimo))
+            {
+                emprestimo.DataEmprestimo = dataEmprestimo;
+            }
+            else
+            {
+                notificador.ApresentarMensagem("Insira uma Data Válida (dd/MM/YYYY): ", ConsoleColor.Red);
+            }
+
 
             Console.WriteLine("Digite a Data limite para devolução da Revista (dd/MM/AAAA): ");
-            emprestimo.DataLimiteDevolucao = Convert.ToDateTime(Console.ReadLine());
+            string dataLimiteDigitada = Console.ReadLine();
+
+            DateTime dataLimiteDevolucao;
+            if (DateTime.TryParse(dataLimiteDigitada, out dataLimiteDevolucao))
+            {
+                emprestimo.DataLimiteDevolucao = dataLimiteDevolucao;
+            }
+            else
+            {
+                notificador.ApresentarMensagem("Insira uma Data Válida (dd/MM/YYYY): ", ConsoleColor.Red);
+            }
 
             listaEmprestimos[indiceEmprestimo] = emprestimo;
             indiceEmprestimo++;
@@ -153,7 +194,10 @@ namespace ClubeDaLeitura.ConsoleApp
 
         public void Editar()
         {
-            var indiceEmprestimoEditar = BuscarIndiceEmprestimo();
+            Console.WriteLine("Digite o Nome da Revista para localizar empréstimo");
+            string nomeRevista = Console.ReadLine();
+
+            var indiceEmprestimoEditar = BuscarIndiceEmprestimo(nomeRevista);
 
             if (indiceEmprestimoEditar == null)
             {
@@ -188,27 +232,25 @@ namespace ClubeDaLeitura.ConsoleApp
                 else if (opcaoEditarEmprestimo == "3")
                 {
                     Console.WriteLine("Digite a nova Data do Empréstimo");
-                    //listaEmprestimos[(int)indiceEmprestimoEditar].DataEmprestimo = Console.ReadLine();
+                    listaEmprestimos[(int)indiceEmprestimoEditar].DataEmprestimo = Convert.ToDateTime(Console.ReadLine());
                 }
                 else if (opcaoEditarEmprestimo == "4")
                 {
                     Console.WriteLine("Digite a nova Data Limite de Devolução");
-                    //listaEmprestimos[(int)indiceEmprestimoEditar].DataLimiteDevolucao = Console.ReadLine();
+                    listaEmprestimos[(int)indiceEmprestimoEditar].DataLimiteDevolucao = Convert.ToDateTime(Console.ReadLine());
 
                 }
 
-                notificador.ApresentarMensagem("Revista Editada!", ConsoleColor.Green);
+                notificador.ApresentarMensagem("Empréstimo Editado!", ConsoleColor.Green);
             }
-        }
-
-        public void Excluir()
-        {
-            throw new NotImplementedException();
         }
 
         public void ConcluirEmprestimo()
         {
-            var indiceEmprestimoConcluir = BuscarIndiceEmprestimo();
+            Console.WriteLine("Digite o Nome da Revista que será devolvida");
+            string nomeRevistaDevolvida = Console.ReadLine();
+
+            var indiceEmprestimoConcluir = BuscarIndiceEmprestimo(nomeRevistaDevolvida);
 
             if (indiceEmprestimoConcluir == null)
             {
@@ -219,15 +261,24 @@ namespace ClubeDaLeitura.ConsoleApp
                 listaEmprestimos[(int)indiceEmprestimoConcluir].ConcluirEmprestimo();
 
             }
+            DisponibilizarRevista(nomeRevistaDevolvida);
 
             notificador.ApresentarMensagem("Devolução de revista concluída!", ConsoleColor.Green);
         }
 
-        public int? BuscarIndiceEmprestimo()
+        public void DisponibilizarRevista(string nomeRevistaDevolvida)
         {
-            Console.WriteLine("Digite o Nome da Revista que será devolvida");
-            string nomeRevistaDevolvida = Console.ReadLine();
+            for (int i = 0; i < listaRevista.Length; i++)
+            {
+                if (nomeRevistaDevolvida == listaRevista[i].Nome)
+                {
+                    listaRevista[i].Disponivel = true;
+                }
+            }
+        }
 
+        public int? BuscarIndiceEmprestimo(string nomeRevistaDevolvida)
+        {
             for (int i = 0; i < listaEmprestimos.Length; i++)
             {
                 if (listaEmprestimos[i] == null)
@@ -239,21 +290,25 @@ namespace ClubeDaLeitura.ConsoleApp
                     return i;
                 }
             }
-
             return null;
         }
 
         public void VisualizarEmprestimosEmAberto()
         {
-            Notificador notificador = new Notificador();
-            notificador.ApresentarMensagem("Empréstimos em Aberto", ConsoleColor.Magenta);
-
+            notificador.ApresentarMensagem("Empréstimos em Aberto: ", ConsoleColor.Magenta);
             for (int i = 0; i < listaEmprestimos.Length; i++)
             {
-                if (listaEmprestimos[i] != null && listaEmprestimos[i].DataEmprestimo == DateTime.Today)
+                if (listaEmprestimos[i] != null)
                 {
-                    Console.WriteLine($"Amigo: {listaEmprestimos[i].Amigo.NomeDoAmigo} - Número da Edição da Revista: {listaEmprestimos[i].Revista.NumeroDaEdicao} - " +
-                       $"Data Empréstimo: {listaEmprestimos[i].DataEmprestimo.ToString("dd/MM/yyyy")} - Data Limite Devolução: {listaEmprestimos[i].DataLimiteDevolucao.ToString("dd/MM/yyyy")}");
+                    if (listaEmprestimos[i]?.DataDevolucao == null &&
+                        listaEmprestimos[i].Amigo.NomeDoAmigo != "" &&
+                        listaEmprestimos[i].Revista.Nome != "")
+                    {
+                        Console.WriteLine($"Amigo: {listaEmprestimos[i].Amigo.NomeDoAmigo}, Revista: {listaEmprestimos[i].Revista.Nome}, " +
+                            $"Data Empréstimo: {listaEmprestimos[i].DataEmprestimo}, Data Limite para Devolução: {listaEmprestimos[i].DataLimiteDevolucao}");
+                    }
+                    else
+                        notificador.ApresentarMensagem("Não existem empréstimos em Aberto.", ConsoleColor.Green);
                 }
             }
         }
@@ -261,7 +316,7 @@ namespace ClubeDaLeitura.ConsoleApp
         public void VisualizarEmprestimosMes()
         {
             Notificador notificador = new Notificador();
-            notificador.ApresentarMensagem("Empréstimos do Mês", ConsoleColor.Magenta);
+            notificador.ApresentarMensagem("Empréstimos do Mês: ", ConsoleColor.Magenta);
 
             for (int i = 0; i < listaEmprestimos.Length; i++)
             {
@@ -276,5 +331,4 @@ namespace ClubeDaLeitura.ConsoleApp
             }
         }
     }
-    
 }

@@ -20,9 +20,9 @@ namespace ClubeDaLeitura.ConsoleApp
 
         public void Gerenciar()
         {
-            GerenciadorRevista gerenciadorRevista = new GerenciadorRevista(listaRevistas, indiceRevista);
+            GerenciadorRevista gerenciadorRevista = new GerenciadorRevista(listaRevistas, indiceRevista, listaCaixa);
             GerenciadorCaixa gerenciadorCaixa = new GerenciadorCaixa(listaCaixa, indiceCaixa);      
-            GerenciadorEmprestimo gerenciadorEmprestimo = new GerenciadorEmprestimo(listaEmprestimo, indiceEmprestimo);
+            GerenciadorEmprestimo gerenciadorEmprestimo = new GerenciadorEmprestimo(listaEmprestimo, indiceEmprestimo, listaRevistas, listaAmigos);
             GerenciadorAmigo gerenciadorAmigo = new GerenciadorAmigo(listaAmigos, indiceAmigo);
 
             while (true)
@@ -43,10 +43,7 @@ namespace ClubeDaLeitura.ConsoleApp
                     gerenciadorCaixa.GerenciarCaixa();
 
                 else if (menuPrincipal.EhGerenciarAmigos())
-                    gerenciadorAmigo.GerenciarAmigo();
-
-
-                else if (menuPrincipal.EhGerenciarEmprestimos())
+                    gerenciadorAmigo.GerenciarAmigo();                else if (menuPrincipal.EhGerenciarEmprestimos())
                     gerenciadorEmprestimo.GerenciarEmprestimo(listaAmigos, listaRevistas);
 
                 
