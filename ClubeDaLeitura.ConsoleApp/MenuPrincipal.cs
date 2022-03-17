@@ -19,9 +19,16 @@ namespace ClubeDaLeitura.ConsoleApp
 
             Console.WriteLine("Digite 4 para Gerenciar Caixas");
 
+            Console.WriteLine("Digite 5 para Gerenciar Categorias de Revistas");
+
             Console.WriteLine("Digite s para sair");
 
             opcaoSelecionada = Console.ReadLine();
+        }
+
+        public bool EhGerenciarCategoriasRevistas()
+        {
+            return opcaoSelecionada == "5";
         }
 
         public bool EhGerenciarCaixas()
@@ -32,7 +39,7 @@ namespace ClubeDaLeitura.ConsoleApp
         public bool EhGerenciarEmprestimos()
         {
             return opcaoSelecionada == "3";
-        }                
+        }
 
         public bool EhGerenciarAmigos()
         {
@@ -42,7 +49,7 @@ namespace ClubeDaLeitura.ConsoleApp
         public bool EhGerenciarRevistas()
         {
             return opcaoSelecionada == "1";
-        }                
+        }
 
         public bool EhSair()
         {
@@ -51,15 +58,12 @@ namespace ClubeDaLeitura.ConsoleApp
 
         public bool EhOpcaoInvalida()
         {
-            if (opcaoSelecionada != "1" &&
+            return (opcaoSelecionada != "1" &&
                 opcaoSelecionada != "2" &&
                 opcaoSelecionada != "3" &&
                 opcaoSelecionada != "4" &&
-                opcaoSelecionada != "s")
-            {
-                return true;
-            }
-            return false;
-        }       
+                opcaoSelecionada != "5" &&
+                opcaoSelecionada != "s");
+        }
     }
 }

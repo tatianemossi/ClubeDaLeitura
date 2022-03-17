@@ -7,13 +7,15 @@ namespace ClubeDaLeitura.ConsoleApp
         Revista[] listaRevistas;
         int indiceRevista;
         Caixa[] listaCaixas;
+        CategoriaRevista[] listaCategoriaRevistas;
         Notificador notificador = new Notificador();
 
-        public GerenciadorRevista(Revista[] revistas, int indiceRevistas, Caixa[] caixas)
+        public GerenciadorRevista(Revista[] revistas, int indiceRevistas, Caixa[] caixas, CategoriaRevista[] categoriaRevistas)
         {
             listaRevistas = revistas;
             indiceRevista = indiceRevistas;
             listaCaixas = caixas;
+            listaCategoriaRevistas = categoriaRevistas;
         }
 
         public string opcaoRevista;
@@ -73,7 +75,8 @@ namespace ClubeDaLeitura.ConsoleApp
                 if (listaRevistas[i] != null)
                 {
                     Console.WriteLine($"Nome: {listaRevistas[i].Nome}, Tipo de Coleção: {listaRevistas[i].TipoDeColecao}, " +
-                        $"Ano: {listaRevistas[i].AnoDaRevista}, Caixa: {listaRevistas[i].Caixa}");
+                        $"Ano: {listaRevistas[i].AnoDaRevista}, Número da Caixa: {listaRevistas[i].Caixa.Numero}, " +
+                        $"Categoria: {listaRevistas[i].Categoria.Nome}");
                 }
                 else
                 {
@@ -173,25 +176,45 @@ namespace ClubeDaLeitura.ConsoleApp
             for (int i = 0; i < listaCaixas.Length; i++)
             {
                 if (numeroCaixa == listaCaixas[i]?.Numero)
-                {
                     indiceCaixa = i;
-                }
             }
 
             if (indiceCaixa == null)
             {
                 notificador.ApresentarMensagem("Caixa não encontrada", ConsoleColor.DarkYellow);
-                notificador.ApresentarMensagem("Revista não cadastrada", ConsoleColor.DarkYellow);
+                notificador.ApresentarMensagem("Revista não cadastrada", ConsoleColor.Red);
                 return;
             }
             else
             {
                 revista.Caixa = listaCaixas[(int)indiceCaixa];
-                listaRevistas[indiceRevista] = revista;
-                indiceRevista++;
 
-                notificador.ApresentarMensagem("Revista cadastrada!", ConsoleColor.Green);
-            }            
+                Console.WriteLine("Qual a categoria da revista?");
+                string categoriaRevista = Console.ReadLine();
+                int? indiceCategoria = null;
+
+                for (int i = 0; i < listaCategoriaRevistas.Length; i++)
+                {
+                    if (categoriaRevista == listaCategoriaRevistas[i]?.Nome)
+                        indiceCategoria = i;
+                }
+
+                if (indiceCategoria == null)
+                {
+                    notificador.ApresentarMensagem("Categoria não encontrada", ConsoleColor.DarkYellow);
+                    notificador.ApresentarMensagem("Categoria de Revista não cadastrada", ConsoleColor.Red);
+                    return;
+                }
+                else
+                {
+                    revista.Categoria = listaCategoriaRevistas[(int)indiceCategoria];
+
+                    listaRevistas[indiceRevista] = revista;
+                    indiceRevista++;
+
+                    notificador.ApresentarMensagem("Revista cadastrada!", ConsoleColor.Green);
+                }                    
+            }
         }
 
         public int? BuscarIndiceRevista()
