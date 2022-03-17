@@ -71,7 +71,6 @@ namespace ClubeDaLeitura.ConsoleApp
                     notificador.ApresentarMensagem("Opção Inválida", ConsoleColor.Red);
                 }
             }
-
         }
 
         public bool EhAdicionarEmprestimos()
@@ -122,6 +121,7 @@ namespace ClubeDaLeitura.ConsoleApp
         {
             Emprestimo emprestimo = new Emprestimo();
 
+            #region Adicionar Amigo
             Console.WriteLine("Digite o nome do Amigo que Pegou a Revista: ");
             string nomeAmigo = Console.ReadLine();
             int? indiceAmigo = null;
@@ -140,7 +140,9 @@ namespace ClubeDaLeitura.ConsoleApp
             }
             else
                 emprestimo.Amigo = listaAmigo[(int)indiceAmigo];
+            #endregion
 
+            #region Adicionar Revista
             Console.WriteLine("Digite o nome da Revista: ");
             string nomeRevista = Console.ReadLine();
             int? indiceRevista = null;
@@ -158,38 +160,35 @@ namespace ClubeDaLeitura.ConsoleApp
                 listaRevista[(int)indiceRevista].Disponivel = false;
                 emprestimo.Revista = listaRevista[(int)indiceRevista];
             }
+            #endregion
 
+            #region Adicionar Data Empréstimo
             Console.WriteLine("Digite a Data do Empréstimo (dd/MM/AAAA): ");
             string dataDigitada = Console.ReadLine();
-
             DateTime dataEmprestimo;
             if (DateTime.TryParse(dataDigitada, out dataEmprestimo))
-            {
                 emprestimo.DataEmprestimo = dataEmprestimo;
-            }
+
             else
-            {
                 notificador.ApresentarMensagem("Insira uma Data Válida (dd/MM/YYYY): ", ConsoleColor.Red);
-            }
+            #endregion
 
-
-            Console.WriteLine("Digite a Data limite para devolução da Revista (dd/MM/AAAA): ");
-            string dataLimiteDigitada = Console.ReadLine();
-
-            DateTime dataLimiteDevolucao;
-            if (DateTime.TryParse(dataLimiteDigitada, out dataLimiteDevolucao))
-            {
-                emprestimo.DataLimiteDevolucao = dataLimiteDevolucao;
-            }
-            else
-            {
-                notificador.ApresentarMensagem("Insira uma Data Válida (dd/MM/YYYY): ", ConsoleColor.Red);
-            }
+            VerificarDataLimiteDevolução(indiceRevista, emprestimo);
 
             listaEmprestimos[indiceEmprestimo] = emprestimo;
             indiceEmprestimo++;
 
             notificador.ApresentarMensagem("Empréstimo cadastrado!", ConsoleColor.Green);
+        }
+
+        public void VerificarDataLimiteDevolução(int? indiceRevista, Emprestimo emprestimo)
+        {
+            for (int i = 0; i < listaRevista.Length; i++)
+            {
+                emprestimo.DataLimiteDevolucao = (DateTime.Now.AddDays(listaRevista[(int)indiceRevista].Categoria.QuantidadeDiasEmprestimo));
+            }
+
+            notificador.ApresentarMensagem($"Data Limite para Devolução: {emprestimo.DataLimiteDevolucao}", ConsoleColor.DarkYellow);
         }
 
         public void Editar()
@@ -255,13 +254,17 @@ namespace ClubeDaLeitura.ConsoleApp
             if (indiceEmprestimoConcluir == null)
             {
                 notificador.ApresentarMensagem("Item não encontrado", ConsoleColor.Red);
+                return;
             }
-            else if (indiceEmprestimoConcluir != null)
-            {
-                listaEmprestimos[(int)indiceEmprestimoConcluir].ConcluirEmprestimo();
 
-            }
+            listaEmprestimos[(int)indiceEmprestimoConcluir].ConcluirEmprestimo();
+
             DisponibilizarRevista(nomeRevistaDevolvida);
+
+            if (listaEmprestimos[(int)indiceEmprestimoConcluir].DataDevolucao < DateTime.Now)
+            {
+                listaEmprestimos[(int)indiceEmprestimoConcluir].Amigo.Multa = new decimal(10);
+            }
 
             notificador.ApresentarMensagem("Devolução de revista concluída!", ConsoleColor.Green);
         }
@@ -270,7 +273,7 @@ namespace ClubeDaLeitura.ConsoleApp
         {
             for (int i = 0; i < listaRevista.Length; i++)
             {
-                if (nomeRevistaDevolvida == listaRevista[i].Nome)
+                if (nomeRevistaDevolvida == listaRevista[i]?.Nome)
                 {
                     listaRevista[i].Disponivel = true;
                 }

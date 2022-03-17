@@ -6,5 +6,6 @@
         public string NomeDoResponsavel;
         public string Telefone;
         public string Endereco;
+        public decimal Multa;
     }
 }
