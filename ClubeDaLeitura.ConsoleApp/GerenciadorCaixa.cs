@@ -34,6 +34,8 @@ namespace ClubeDaLeitura.ConsoleApp
 
                 opcaoCaixa = Console.ReadLine();
 
+                Console.Clear();
+
                 if (EhSair())
                 {
                     break;
@@ -117,6 +119,8 @@ namespace ClubeDaLeitura.ConsoleApp
                 Console.WriteLine("Digite s para sair");
 
                 string opcaoEditarCaixa = Console.ReadLine();
+
+                Console.Clear();
 
                 if (opcaoEditarCaixa == "1")
                 {

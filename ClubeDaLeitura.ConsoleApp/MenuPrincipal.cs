@@ -21,9 +21,18 @@ namespace ClubeDaLeitura.ConsoleApp
 
             Console.WriteLine("Digite 5 para Gerenciar Categorias de Revistas");
 
+            Console.WriteLine("Digite 6 para Gerenciar Reservas de Revistas");
+
             Console.WriteLine("Digite s para sair");
 
             opcaoSelecionada = Console.ReadLine();
+
+            Console.Clear();
+        }
+
+        public bool EhGerenciarReservasRevistas()
+        {
+            return opcaoSelecionada == "6";
         }
 
         public bool EhGerenciarCategoriasRevistas()
@@ -63,6 +72,7 @@ namespace ClubeDaLeitura.ConsoleApp
                 opcaoSelecionada != "3" &&
                 opcaoSelecionada != "4" &&
                 opcaoSelecionada != "5" &&
+                opcaoSelecionada != "6" &&
                 opcaoSelecionada != "s");
         }
     }

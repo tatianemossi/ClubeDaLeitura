@@ -19,6 +19,9 @@ namespace ClubeDaLeitura.ConsoleApp
         CategoriaRevista[] listaCategoriasRevistas = new CategoriaRevista[10];
         int indiceCategoria = 0;
 
+        ReservaRevista[] listaReservasRevistas = new ReservaRevista[10];
+        int indiceReservas = 0;
+
         Notificador notificador = new Notificador();
 
         public void Gerenciar()
@@ -28,7 +31,7 @@ namespace ClubeDaLeitura.ConsoleApp
             GerenciadorEmprestimo gerenciadorEmprestimo = new GerenciadorEmprestimo(listaEmprestimo, indiceEmprestimo, listaRevistas, listaAmigos);
             GerenciadorAmigo gerenciadorAmigo = new GerenciadorAmigo(listaAmigos, indiceAmigo);
             GerenciadorCategoriasRevistas gerenciadorCategoriasRevistas = new GerenciadorCategoriasRevistas(listaCategoriasRevistas, indiceCategoria);
-
+            GerenciadorReservasRevistas gerenciadorReservasRevistas = new GerenciadorReservasRevistas(listaReservasRevistas, indiceReservas, listaRevistas, listaAmigos, gerenciadorEmprestimo);
 
             while (true)
             {
@@ -48,13 +51,15 @@ namespace ClubeDaLeitura.ConsoleApp
                     gerenciadorCaixa.GerenciarCaixa();
 
                 else if (menuPrincipal.EhGerenciarAmigos())
-                    gerenciadorAmigo.GerenciarAmigo();              
-                
+                    gerenciadorAmigo.GerenciarAmigo();
+
                 else if (menuPrincipal.EhGerenciarEmprestimos())
                     gerenciadorEmprestimo.GerenciarEmprestimo(listaAmigos, listaRevistas);
 
                 else if (menuPrincipal.EhGerenciarCategoriasRevistas())
                     gerenciadorCategoriasRevistas.GerenciarCategoriaRevista();
+                else if (menuPrincipal.EhGerenciarReservasRevistas())
+                    gerenciadorReservasRevistas.GerenciarReservaRevista();                
                 
                 Console.ReadLine();
             }

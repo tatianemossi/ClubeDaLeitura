@@ -40,6 +40,8 @@ namespace ClubeDaLeitura.ConsoleApp
 
                 opcaoEmprestimo = Console.ReadLine();
 
+                Console.Clear();
+
 
                 if (EhSair())
                 {
@@ -137,9 +139,19 @@ namespace ClubeDaLeitura.ConsoleApp
             if (indiceAmigo == null)
             {
                 notificador.ApresentarMensagem("Amigo não encontrado", ConsoleColor.DarkYellow);
+                return;
             }
-            else
-                emprestimo.Amigo = listaAmigo[(int)indiceAmigo];
+
+            for (int i = 0; i < listaAmigo.Length; i++)
+            {
+                if (listaAmigo[(int)indiceAmigo].Multa != 0)
+                {
+                    notificador.ApresentarMensagem("Não é possível emprestar para esse amigo, pois ele tem multa em aberto!", ConsoleColor.Red);
+                    return;
+                }
+            }
+
+            emprestimo.Amigo = listaAmigo[(int)indiceAmigo];
             #endregion
 
             #region Adicionar Revista
@@ -217,6 +229,8 @@ namespace ClubeDaLeitura.ConsoleApp
                 Console.WriteLine("Digite s para sair");
 
                 string opcaoEditarEmprestimo = Console.ReadLine();
+
+                Console.Clear();
 
                 if (opcaoEditarEmprestimo == "1")
                 {

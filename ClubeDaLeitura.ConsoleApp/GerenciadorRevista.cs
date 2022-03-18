@@ -38,6 +38,8 @@ namespace ClubeDaLeitura.ConsoleApp
 
                 opcaoRevista = Console.ReadLine();
 
+                Console.Clear();
+
                 if (EhSair())
                 {
                     break;
@@ -126,6 +128,8 @@ namespace ClubeDaLeitura.ConsoleApp
                 Console.WriteLine("Digite s para sair");
 
                 string opcaoEditarRevista = Console.ReadLine();
+
+                Console.Clear();
 
                 if (opcaoEditarRevista == "1")
                 {

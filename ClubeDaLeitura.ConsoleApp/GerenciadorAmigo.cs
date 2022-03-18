@@ -30,9 +30,15 @@ namespace ClubeDaLeitura.ConsoleApp
 
                 Console.WriteLine("Digite 4 para Visualizar Amigos");
 
+                Console.WriteLine("Digite 5 para Visualizar Amigos com Multas em Aberto");
+
+                Console.WriteLine("Digite 6 para Quitar multas de Amigos ");
+
                 Console.WriteLine("Digite s para sair");
 
                 opcaoAmigo = Console.ReadLine();
+
+                Console.Clear();
 
                 if (EhSair())
                 {
@@ -56,9 +62,48 @@ namespace ClubeDaLeitura.ConsoleApp
                 {
                     Visualizar();
                 }
+                else if (EhVisualizarAmigosComMultas())
+                {
+                    VisualizarAmigosMultas();
+                }
+                else if (EhQuitarMultas())
+                {
+                    QuitarMultas(); 
+                }
                 else if (EhOpcaoInvalida())
                 {
                     notificador.ApresentarMensagem("Opção Inválida", ConsoleColor.Red);
+                }
+            }
+        }
+
+        public void QuitarMultas()
+        {
+            VisualizarAmigosMultas();
+            Console.WriteLine("Digite o nome do amigo para quitar multas: ");            
+            string amigoParaQuitarMulta = Console.ReadLine();
+
+            for (int i = 0; i < listaAmigos.Length; i++)
+            {
+                if (listaAmigos[i] != null)
+                {
+                    if (listaAmigos[i].NomeDoAmigo == amigoParaQuitarMulta &&
+                        listaAmigos[i].Multa != 0)
+                    {
+                        listaAmigos[i].Multa = 0;
+                    }
+                }
+            }
+        }
+
+        public void VisualizarAmigosMultas()
+        {
+            notificador.ApresentarMensagem("Amigos com Multa em Aberto: ", ConsoleColor.Magenta);
+            for (int i = 0; i < listaAmigos.Length; i++)
+            {
+                if (listaAmigos[i].Multa != 0 && listaAmigos[i] != null)
+                {
+                    Console.WriteLine($"Amigo: {listaAmigos[i].NomeDoAmigo}, Multa: {listaAmigos[i].Multa}");
                 }
             }
         }
@@ -121,6 +166,8 @@ namespace ClubeDaLeitura.ConsoleApp
                 Console.WriteLine("Digite s para sair");
 
                 string opcaoEditarAmigo = Console.ReadLine();
+
+                Console.Clear();
 
                 if (opcaoEditarAmigo == "1")
                 {
@@ -205,6 +252,16 @@ namespace ClubeDaLeitura.ConsoleApp
             return opcaoAmigo == "4";
         }
 
+        public bool EhVisualizarAmigosComMultas()
+        {
+            return opcaoAmigo == "5";
+        }
+
+        public bool EhQuitarMultas()
+        {
+            return opcaoAmigo == "6";
+        }
+
         public bool EhSair()
         {
             return opcaoAmigo == "s";
@@ -212,15 +269,13 @@ namespace ClubeDaLeitura.ConsoleApp
 
         public bool EhOpcaoInvalida()
         {
-            if (opcaoAmigo != "1" &&
+            return (opcaoAmigo != "1" &&
                 opcaoAmigo != "2" &&
                 opcaoAmigo != "3" &&
                 opcaoAmigo != "4" &&
-                opcaoAmigo != "s")
-            {
-                return true;
-            }
-            return false;
+                opcaoAmigo != "5" &&
+                opcaoAmigo != "6" &&
+                opcaoAmigo != "s");
         }      
     }
 }
